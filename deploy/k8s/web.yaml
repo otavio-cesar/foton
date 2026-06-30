@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foton-web
+  namespace: foton
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foton-web
+  template:
+    metadata:
+      labels:
+        app: foton-web
+    spec:
+      containers:
+        - name: web
+          image: seu-usuario-dockerhub/foton-web:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foton-web
+  namespace: foton
+spec:
+  type: LoadBalancer
+  selector:
+    app: foton-web
+  ports:
+    - port: 80
+      targetPort: 80

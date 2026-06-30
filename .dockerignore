@@ -1,0 +1,8 @@
+.git
+.tools
+apps/web/node_modules
+apps/web/dist
+apps/web/.angular
+**/bin
+**/obj
+dev-server.log

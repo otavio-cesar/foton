@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Carregador de veiculo eletrico residencial</title>
+  <desc id="desc">Ilustracao de uma garagem com carro eletrico, paineis solares e carregador Foton.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f9fff5"/>
+      <stop offset="1" stop-color="#f6e88b"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" x2="1">
+      <stop offset="0" stop-color="#1f8a4c"/>
+      <stop offset="1" stop-color="#83c341"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#sky)"/>
+  <rect x="0" y="620" width="1200" height="280" fill="#dfe8da"/>
+  <path d="M120 455h570l95 165H45z" fill="#ffffff"/>
+  <path d="M190 310h500l140 145H120z" fill="#24503a"/>
+  <g fill="#6c8f7c">
+    <rect x="235" y="340" width="96" height="64" rx="4"/>
+    <rect x="350" y="340" width="96" height="64" rx="4"/>
+    <rect x="465" y="340" width="96" height="64" rx="4"/>
+    <rect x="580" y="340" width="96" height="64" rx="4"/>
+  </g>
+  <path d="M230 610c35-88 127-140 250-140h62c151 0 252 50 303 140l29 50H200z" fill="#27313a"/>
+  <rect x="275" y="565" width="560" height="95" rx="44" fill="#f7f9f4"/>
+  <circle cx="345" cy="660" r="58" fill="#1e2b2b"/>
+  <circle cx="345" cy="660" r="28" fill="#94a39a"/>
+  <circle cx="735" cy="660" r="58" fill="#1e2b2b"/>
+  <circle cx="735" cy="660" r="28" fill="#94a39a"/>
+  <rect x="842" y="235" width="156" height="470" rx="34" fill="#f8fbf5" stroke="#d1dfcf" stroke-width="8"/>
+  <rect x="882" y="290" width="76" height="102" rx="12" fill="url(#green)"/>
+  <circle cx="920" cy="430" r="26" fill="#ffd84d"/>
+  <path d="M982 454c110 4 130 104 62 147-39 25-101 20-124-31" fill="none" stroke="#23352e" stroke-width="20" stroke-linecap="round"/>
+  <rect x="868" y="705" width="108" height="24" rx="12" fill="#20462f"/>
+  <path d="M116 720h970" stroke="#c4d1c0" stroke-width="12" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,6 @@
+aws_region       = "sa-east-1"
+project_name     = "foton-ev"
+environment      = "prod"
+instance_type    = "t3.small"
+ssh_allowed_cidr = "SEU_IP_PUBLICO/32"
+root_volume_size = 30

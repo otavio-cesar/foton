@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Totem e carregador wallbox</title>
+  <desc id="desc">Ilustracao de opcoes de totem e carregador de parede para veiculos eletricos.</desc>
+  <rect width="900" height="560" fill="#eff7ea"/>
+  <rect x="0" y="390" width="900" height="170" fill="#dce7d7"/>
+  <rect x="74" y="130" width="752" height="268" rx="8" fill="#ffffff"/>
+  <rect x="110" y="166" width="210" height="132" rx="6" fill="#d9e4d4"/>
+  <path d="M110 298h210l-42 54H152z" fill="#cbd9c5"/>
+  <rect x="594" y="92" width="118" height="360" rx="30" fill="#f9fbf6" stroke="#c6d7c2" stroke-width="7"/>
+  <rect x="626" y="138" width="54" height="86" rx="10" fill="#26824a"/>
+  <circle cx="653" cy="260" r="21" fill="#ffd84d"/>
+  <rect x="617" y="452" width="76" height="18" rx="9" fill="#254531"/>
+  <rect x="390" y="178" width="126" height="172" rx="22" fill="#fbfdf8" stroke="#c6d7c2" stroke-width="7"/>
+  <rect x="425" y="215" width="56" height="50" rx="9" fill="#ffd84d"/>
+  <path d="M514 304c61 16 70 75 25 104-34 22-86 4-92-38" fill="none" stroke="#23352e" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="210" cy="417" r="43" fill="#1d2d28"/>
+  <circle cx="210" cy="417" r="18" fill="#94a39a"/>
+  <rect x="158" y="333" width="310" height="70" rx="34" fill="#26333a"/>
+  <rect x="195" y="307" width="188" height="56" rx="28" fill="#f8fbf5"/>
+</svg>

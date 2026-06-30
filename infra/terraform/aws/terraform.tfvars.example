@@ -1,0 +1,12 @@
+aws_region  = "sa-east-1"
+project_name = "foton-ev"
+environment  = "prod"
+
+dockerhub_namespace = "seu-usuario-dockerhub"
+api_image_name      = "foton-api"
+web_image_name      = "foton-web"
+image_tag           = "latest"
+eks_cluster_version = "1.36"
+
+db_username = "foton"
+db_password = "change-me-with-a-secret"

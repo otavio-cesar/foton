@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Foton.Api/Foton.Api.csproj" />
+    <Project Path="src/Foton.Application/Foton.Application.csproj" />
+    <Project Path="src/Foton.Domain/Foton.Domain.csproj" />
+    <Project Path="src/Foton.Infrastructure/Foton.Infrastructure.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">Padrao eletrico bifasico</title>
+  <desc id="desc">Ilustracao de quadro eletrico bifasico com protecoes para carregador.</desc>
+  <rect width="900" height="560" fill="#f7f9f2"/>
+  <rect x="70" y="72" width="760" height="416" rx="10" fill="#e0e8dc"/>
+  <rect x="126" y="118" width="292" height="318" rx="12" fill="#fbfdf8" stroke="#b9cbb6" stroke-width="8"/>
+  <rect x="166" y="164" width="212" height="54" rx="6" fill="#203b2a"/>
+  <g fill="#ffd84d">
+    <rect x="166" y="248" width="44" height="104" rx="6"/>
+    <rect x="230" y="248" width="44" height="104" rx="6"/>
+    <rect x="294" y="248" width="44" height="104" rx="6"/>
+  </g>
+  <g stroke="#247040" stroke-width="11" fill="none" stroke-linecap="round">
+    <path d="M468 168h110v110h122"/>
+    <path d="M468 224h70v148h166"/>
+    <path d="M468 280h34v104h90"/>
+  </g>
+  <rect x="602" y="116" width="124" height="176" rx="16" fill="#ffffff" stroke="#b9cbb6" stroke-width="8"/>
+  <circle cx="664" cy="204" r="34" fill="#26824a"/>
+  <rect x="594" y="344" width="152" height="74" rx="12" fill="#203b2a"/>
+  <path d="M624 382h92" stroke="#ffd84d" stroke-width="12" stroke-linecap="round"/>
+  <path d="M124 464h650" stroke="#c4d1c0" stroke-width="12" stroke-linecap="round"/>
+</svg>

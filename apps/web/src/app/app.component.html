@@ -1,0 +1,125 @@
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <header class="topbar">
+      <a class="brand" href="#hero-title" aria-label="Foton Energia Fotovoltaica">
+        <span class="brand-mark">F</span>
+        <span>Foton Energia Fotovoltaica</span>
+      </a>
+      <nav aria-label="Navegacao principal">
+        <a href="#servicos">Servicos</a>
+        <a href="#tecnica">Tecnica</a>
+        <a href="#orcamento">Orcamento</a>
+      </nav>
+    </header>
+
+    <div class="hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">Carregamento residencial e comercial leve</p>
+        <h1 id="hero-title">Carregador de veiculo eletrico ate 7 kW, instalado com padrao profissional.</h1>
+        <p class="hero-text">
+          Projeto, fornecimento do carregador ou totem e instalacao em rede bifasica, com opcao de adequacao do padrao eletrico.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#orcamento">Fazer orcamento</a>
+          <a class="secondary-action" href="#servicos">Ver solucoes</a>
+        </div>
+      </div>
+      <figure class="hero-image">
+        <img src="assets/images/hero-charger.svg" alt="Carregador de veiculo eletrico instalado em garagem residencial com paineis solares">
+      </figure>
+    </div>
+  </section>
+
+  <section id="servicos" class="section">
+    <div class="section-heading">
+      <p class="eyebrow">Solucoes</p>
+      <h2>Do ponto de energia ao carregador pronto para uso.</h2>
+    </div>
+    <div class="service-grid">
+      <article class="service-card">
+        <img src="assets/images/totem-options.svg" alt="Totem e carregador de veiculo eletrico em area coberta">
+        <h3>Totem ou carregador</h3>
+        <p>Indicacao do equipamento ideal para garagem, condominio, comercio ou pequeno estacionamento.</p>
+      </article>
+      <article class="service-card">
+        <img src="assets/images/electrical-standard.svg" alt="Instalacao profissional de padrao eletrico bifasico">
+        <h3>Padrao eletrico</h3>
+        <p>Adequacao da infraestrutura para rede bifasica, protecoes, disjuntores, conduites e aterramento.</p>
+      </article>
+      <article class="service-card muted">
+        <div class="metric">7 kW</div>
+        <h3>Carga ate 7 kW</h3>
+        <p>Potencia adequada para recarga diaria em residencias e operacoes leves, com orientacao tecnica antes da instalacao.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="tecnica" class="technical-band">
+    <div>
+      <p class="eyebrow">Base tecnica</p>
+      <h2>Instalacao planejada para seguranca, desempenho e expansao.</h2>
+    </div>
+    <ul>
+      <li>Rede bifasica dimensionada para o carregador.</li>
+      <li>Protecao eletrica dedicada e circuito identificado.</li>
+      <li>Infraestrutura preparada para totem ou wallbox.</li>
+      <li>Registro do orcamento para atendimento por assistente virtual.</li>
+    </ul>
+  </section>
+
+  <section id="orcamento" class="quote-section" aria-labelledby="quote-title">
+    <div class="quote-copy">
+      <p class="eyebrow">Faca seu orcamento</p>
+      <h2 id="quote-title">Envie os dados para a assistente virtual iniciar o atendimento.</h2>
+      <p>
+        O pedido sera salvo pela API da Foton e encaminhado para a assistente virtual assim que a integracao for configurada.
+      </p>
+    </div>
+
+    <form [formGroup]="quoteForm" (ngSubmit)="submitQuote()" class="quote-form">
+      <label>
+        Nome
+        <input type="text" formControlName="name" autocomplete="name">
+      </label>
+      <label>
+        Telefone/WhatsApp
+        <input type="tel" formControlName="phone" autocomplete="tel">
+      </label>
+      <label>
+        E-mail
+        <input type="email" formControlName="email" autocomplete="email">
+      </label>
+      <label>
+        Cidade/UF
+        <input type="text" formControlName="city" autocomplete="address-level2">
+      </label>
+      <label>
+        Solucao desejada
+        <select formControlName="installationType">
+          <option value="both">Carregador + instalacao</option>
+          <option value="charger">Somente carregador</option>
+          <option value="totem">Totem</option>
+          <option value="not-sure">Quero orientacao</option>
+        </select>
+      </label>
+      <div class="checks">
+        <label>
+          <input type="checkbox" formControlName="needsElectricalStandard">
+          Preciso avaliar o padrao eletrico
+        </label>
+        <label>
+          <input type="checkbox" formControlName="hasBiphasicNetwork">
+          Tenho ou pretendo usar rede bifasica
+        </label>
+      </div>
+      <label class="full">
+        Mensagem
+        <textarea formControlName="message" rows="4" placeholder="Conte onde sera a instalacao e qual veiculo sera carregado."></textarea>
+      </label>
+
+      <p class="form-error" *ngIf="error()">{{ error() }}</p>
+      <p class="form-success" *ngIf="submitted()">Orcamento recebido. A assistente virtual continuara o atendimento.</p>
+      <button type="submit" [disabled]="sending()">{{ sending() ? 'Enviando...' : 'Enviar para orcamento' }}</button>
+    </form>
+  </section>
+</main>

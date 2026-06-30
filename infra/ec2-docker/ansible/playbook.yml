@@ -1,0 +1,63 @@
+- name: Configure Foton EC2 Docker host
+  hosts: foton_ec2
+  become: true
+  vars:
+    app_dir: /opt/foton
+  tasks:
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name: docker
+        state: present
+
+    - name: Enable Docker service
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Add ec2-user to docker group
+      ansible.builtin.user:
+        name: ec2-user
+        groups: docker
+        append: true
+
+    - name: Install Docker Compose plugin
+      ansible.builtin.dnf:
+        name: docker-compose-plugin
+        state: present
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: "0755"
+
+    - name: Copy production compose file
+      ansible.builtin.copy:
+        src: ../compose/docker-compose.prod.yml
+        dest: "{{ app_dir }}/docker-compose.yml"
+        owner: ec2-user
+        group: ec2-user
+        mode: "0644"
+
+    - name: Copy environment file
+      ansible.builtin.copy:
+        src: ../compose/.env
+        dest: "{{ app_dir }}/.env"
+        owner: ec2-user
+        group: ec2-user
+        mode: "0600"
+
+    - name: Pull latest configured images
+      ansible.builtin.command:
+        cmd: docker compose pull
+        chdir: "{{ app_dir }}"
+      changed_when: true
+
+    - name: Start Foton stack
+      ansible.builtin.command:
+        cmd: docker compose up -d
+        chdir: "{{ app_dir }}"
+      changed_when: true

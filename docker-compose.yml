@@ -1,0 +1,40 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: foton
+      POSTGRES_USER: foton
+      POSTGRES_PASSWORD: foton_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - foton_pg_data:/var/lib/postgresql/data
+      - ./deploy/database/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+
+  api:
+    build:
+      context: .
+      dockerfile: deploy/docker/api.Dockerfile
+    environment:
+      ConnectionStrings__FotonDb: Host=database;Port=5432;Database=foton;Username=foton;Password=foton_dev_password
+      Cors__AllowedOrigins__0: http://localhost:4200
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      default:
+        aliases:
+          - foton-api
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/docker/web.Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+volumes:
+  foton_pg_data:

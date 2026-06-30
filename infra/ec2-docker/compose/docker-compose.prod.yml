@@ -1,0 +1,41 @@
+services:
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - foton_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: ${DOCKERHUB_NAMESPACE}/foton-api:${IMAGE_TAG}
+    restart: unless-stopped
+    environment:
+      ConnectionStrings__FotonDb: Host=database;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      Database__EnsureCreatedOnStartup: "true"
+      Cors__AllowedOrigins__0: ${PUBLIC_ORIGIN}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      default:
+        aliases:
+          - foton-api
+
+  web:
+    image: ${DOCKERHUB_NAMESPACE}/foton-web:${IMAGE_TAG}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  foton_pg_data:
