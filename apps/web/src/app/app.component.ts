@@ -51,7 +51,7 @@ export class AppComponent {
       },
       error: () => {
         this.sending.set(false);
-        this.error.set('Nao foi possivel enviar agora. Tente novamente em instantes.');
+        this.error.set('Não foi possível enviar agora. Tente novamente em instantes.');
       }
     });
   }

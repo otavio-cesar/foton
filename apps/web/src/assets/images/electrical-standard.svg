@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
-  <title id="title">Padrao eletrico bifasico</title>
-  <desc id="desc">Ilustracao de quadro eletrico bifasico com protecoes para carregador.</desc>
+  <title id="title">Padrão elétrico bifásico</title>
+  <desc id="desc">Ilustração de quadro elétrico bifásico com proteções para carregador.</desc>
   <rect width="900" height="560" fill="#f7f9f2"/>
   <rect x="70" y="72" width="760" height="416" rx="10" fill="#e0e8dc"/>
   <rect x="126" y="118" width="292" height="318" rx="12" fill="#fbfdf8" stroke="#b9cbb6" stroke-width="8"/>
