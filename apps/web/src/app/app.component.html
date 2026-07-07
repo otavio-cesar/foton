@@ -71,9 +71,9 @@
   <section id="orcamento" class="quote-section" aria-labelledby="quote-title">
     <div class="quote-copy">
       <p class="eyebrow">Faça seu orçamento</p>
-      <h2 id="quote-title">Envie os dados para a assistente virtual iniciar o atendimento.</h2>
+      <h2 id="quote-title">Conte o que você tem hoje e entraremos em contato.</h2>
       <p>
-        O pedido será salvo pela API e encaminhado para a assistente virtual assim que a integração for configurada.
+        Envie suas informações para receber uma avaliação inicial da Higgs Energia.
       </p>
     </div>
 
@@ -117,7 +117,7 @@
       </label>
 
       <p class="form-error" *ngIf="error()">{{ error() }}</p>
-      <p class="form-success" *ngIf="submitted()">Orçamento recebido. A assistente virtual continuará o atendimento.</p>
+      <p class="form-success" *ngIf="submitted()">Orçamento recebido. Em breve entraremos em contato.</p>
       <button type="submit" [disabled]="sending()">{{ sending() ? 'Enviando...' : 'Enviar para orçamento' }}</button>
     </form>
   </section>
