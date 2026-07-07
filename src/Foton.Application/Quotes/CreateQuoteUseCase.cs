@@ -20,9 +20,8 @@ public sealed class CreateQuoteUseCase
             request.Phone,
             request.Email,
             request.City,
-            ParseInstallationType(request.InstallationType),
-            request.NeedsElectricalStandard,
-            request.HasBiphasicNetwork,
+            ParseElectricalSupplyType(request.ElectricalSupplyType),
+            ParsePropertyType(request.PropertyType),
             request.Message);
 
         await repository.AddAsync(quote, cancellationToken);
@@ -42,15 +41,26 @@ public sealed class CreateQuoteUseCase
         return new CreateQuoteResponse(quote.Id, quote.Status.ToString());
     }
 
-    private static InstallationType ParseInstallationType(string value)
+    private static ElectricalSupplyType ParseElectricalSupplyType(string value)
     {
         return value.Trim().ToLowerInvariant() switch
         {
-            "charger" => InstallationType.Charger,
-            "totem" => InstallationType.Totem,
-            "both" => InstallationType.Both,
-            "not-sure" => InstallationType.NotSure,
-            _ => throw new ArgumentException("Invalid installation type.", nameof(value))
+            "monophasic-110" => ElectricalSupplyType.Monophasic110,
+            "biphasic-220" => ElectricalSupplyType.Biphasic220,
+            "triphasic" => ElectricalSupplyType.Triphasic,
+            "single-phase-380" => ElectricalSupplyType.SinglePhase380,
+            _ => throw new ArgumentException("Invalid electrical supply type.", nameof(value))
+        };
+    }
+
+    private static PropertyType ParsePropertyType(string value)
+    {
+        return value.Trim().ToLowerInvariant() switch
+        {
+            "residence" => PropertyType.Residence,
+            "condominium" => PropertyType.Condominium,
+            "commercial" => PropertyType.Commercial,
+            _ => throw new ArgumentException("Invalid property type.", nameof(value))
         };
     }
 }

@@ -94,27 +94,25 @@
         <input type="text" formControlName="city" autocomplete="address-level2">
       </label>
       <label>
-        Solucao desejada
-        <select formControlName="installationType">
-          <option value="both">Carregador + instalacao</option>
-          <option value="charger">Somente carregador</option>
-          <option value="totem">Totem</option>
-          <option value="not-sure">Quero orientacao</option>
+        Padrão elétrico atual
+        <select formControlName="electricalSupplyType">
+          <option value="monophasic-110">Monofásico 110 V</option>
+          <option value="biphasic-220">Bifásico 220 V</option>
+          <option value="triphasic">Trifásico</option>
+          <option value="single-phase-380">Uma fase 380 V (220 V)</option>
         </select>
       </label>
-      <div class="checks">
-        <label>
-          <input type="checkbox" formControlName="needsElectricalStandard">
-          Preciso avaliar o padrao eletrico
-        </label>
-        <label>
-          <input type="checkbox" formControlName="hasBiphasicNetwork">
-          Tenho ou pretendo usar rede bifasica
-        </label>
-      </div>
+      <label>
+        Tipo de habitação
+        <select formControlName="propertyType">
+          <option value="residence">Residência</option>
+          <option value="condominium">Condomínio</option>
+          <option value="commercial">Comercial</option>
+        </select>
+      </label>
       <label class="full">
         Mensagem
-        <textarea formControlName="message" rows="4" placeholder="Conte onde sera a instalacao e qual veiculo sera carregado."></textarea>
+        <textarea formControlName="message" rows="4" placeholder="Conte onde será a instalação e qual veículo será carregado."></textarea>
       </label>
 
       <p class="form-error" *ngIf="error()">{{ error() }}</p>

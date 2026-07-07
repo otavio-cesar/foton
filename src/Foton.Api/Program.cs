@@ -42,6 +42,7 @@ if (app.Configuration.GetValue("Database:EnsureCreatedOnStartup", false))
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<FotonDbContext>();
     await dbContext.Database.EnsureCreatedAsync();
+    await EnsureQuoteColumnsAsync(dbContext, CancellationToken.None);
 
     await snapshotStore.UploadAsync(CancellationToken.None);
 }
@@ -67,3 +68,43 @@ app.MapPost("/api/quotes", async (
 });
 
 app.Run();
+
+static async Task EnsureQuoteColumnsAsync(FotonDbContext dbContext, CancellationToken cancellationToken)
+{
+    var connection = dbContext.Database.GetDbConnection();
+    await connection.OpenAsync(cancellationToken);
+
+    try
+    {
+        var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        await using (var command = connection.CreateCommand())
+        {
+            command.CommandText = "PRAGMA table_info(quotes);";
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                columns.Add(reader.GetString(1));
+            }
+        }
+
+        if (!columns.Contains("ElectricalSupplyType"))
+        {
+            await dbContext.Database.ExecuteSqlRawAsync(
+                "ALTER TABLE quotes ADD COLUMN ElectricalSupplyType TEXT NOT NULL DEFAULT 'Unknown';",
+                cancellationToken);
+        }
+
+        if (!columns.Contains("PropertyType"))
+        {
+            await dbContext.Database.ExecuteSqlRawAsync(
+                "ALTER TABLE quotes ADD COLUMN PropertyType TEXT NOT NULL DEFAULT 'Unknown';",
+                cancellationToken);
+        }
+    }
+    finally
+    {
+        await connection.CloseAsync();
+    }
+}

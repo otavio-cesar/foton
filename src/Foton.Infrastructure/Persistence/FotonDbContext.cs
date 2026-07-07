@@ -22,7 +22,8 @@ public sealed class FotonDbContext : DbContext
             entity.Property(quote => quote.Phone).HasMaxLength(40).IsRequired();
             entity.Property(quote => quote.Email).HasMaxLength(180).IsRequired();
             entity.Property(quote => quote.City).HasMaxLength(120).IsRequired();
-            entity.Property(quote => quote.InstallationType).HasConversion<string>().HasMaxLength(32);
+            entity.Property(quote => quote.ElectricalSupplyType).HasConversion<string>().HasMaxLength(40);
+            entity.Property(quote => quote.PropertyType).HasConversion<string>().HasMaxLength(32);
             entity.Property(quote => quote.Status).HasConversion<string>().HasMaxLength(32);
             entity.Property(quote => quote.Message).HasMaxLength(2000);
             entity.Property(quote => quote.CreatedAtUtc).IsRequired();

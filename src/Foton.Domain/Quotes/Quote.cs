@@ -11,9 +11,8 @@ public sealed class Quote
         string phone,
         string email,
         string city,
-        InstallationType installationType,
-        bool needsElectricalStandard,
-        bool hasBiphasicNetwork,
+        ElectricalSupplyType electricalSupplyType,
+        PropertyType propertyType,
         string? message)
     {
         Id = Guid.NewGuid();
@@ -21,9 +20,8 @@ public sealed class Quote
         Phone = Required(phone, nameof(phone));
         Email = Required(email, nameof(email));
         City = Required(city, nameof(city));
-        InstallationType = installationType;
-        NeedsElectricalStandard = needsElectricalStandard;
-        HasBiphasicNetwork = hasBiphasicNetwork;
+        ElectricalSupplyType = electricalSupplyType;
+        PropertyType = propertyType;
         Message = message?.Trim() ?? string.Empty;
         Status = QuoteStatus.Received;
         CreatedAtUtc = DateTimeOffset.UtcNow;
@@ -34,9 +32,8 @@ public sealed class Quote
     public string Phone { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
     public string City { get; private set; } = string.Empty;
-    public InstallationType InstallationType { get; private set; }
-    public bool NeedsElectricalStandard { get; private set; }
-    public bool HasBiphasicNetwork { get; private set; }
+    public ElectricalSupplyType ElectricalSupplyType { get; private set; }
+    public PropertyType PropertyType { get; private set; }
     public string Message { get; private set; } = string.Empty;
     public QuoteStatus Status { get; private set; }
     public DateTimeOffset CreatedAtUtc { get; private set; }

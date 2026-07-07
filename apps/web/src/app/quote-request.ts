@@ -3,8 +3,7 @@ export interface QuoteRequest {
   phone: string;
   email: string;
   city: string;
-  installationType: 'charger' | 'totem' | 'both' | 'not-sure';
-  needsElectricalStandard: boolean;
-  hasBiphasicNetwork: boolean;
+  electricalSupplyType: 'monophasic-110' | 'biphasic-220' | 'triphasic' | 'single-phase-380';
+  propertyType: 'residence' | 'condominium' | 'commercial';
   message: string;
 }
