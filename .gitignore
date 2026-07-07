@@ -14,6 +14,9 @@ dist/
 !*.tfvars.example
 *.pem
 generated/
+*.db
+*.db-shm
+*.db-wal
 .env
 .env.*
 !*.env.example
