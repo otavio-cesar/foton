@@ -5,7 +5,6 @@ public sealed record CreateQuoteRequest(
     string Phone,
     string Email,
     string City,
-    string InstallationType,
-    bool NeedsElectricalStandard,
-    bool HasBiphasicNetwork,
+    string ElectricalSupplyType,
+    string PropertyType,
     string? Message);

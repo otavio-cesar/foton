@@ -1,14 +1,14 @@
 # Higgs Energia - Landing Page EV
 
-Landing page e API para oferta de instalacao de carregadores de veiculos eletricos ate 7 kW em rede bifasica, com opcao de totem/carregador e instalacao de padrao eletrico.
+Landing page e API para oferta de instalação de carregadores de veículos elétricos até 7 kW em rede bifásica, com opção de Wallbox/carregador e instalação de padrão elétrico.
 
 ## Stack proposta
 
 - Frontend: Angular standalone
-- Backend: .NET 10, Clean Architecture, orientacao a objetos
+- Backend: .NET 10, Clean Architecture, orientação a objetos
 - Banco: SQLite com snapshot em S3 para MVP
 - Containers: Docker
-- Orquestracao: ECS Fargate Spot para a API
+- Orquestração: ECS Fargate Spot para a API
 - Nuvem: AWS
 - Infraestrutura: Terraform
 - CDN/frontend: S3 privado com CloudFront
@@ -45,11 +45,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-backend.ps1
 
 ## Observacoes do ambiente atual
 
-Este scaffold usa ferramentas locais em `.tools/` para .NET, Terraform e Git neste workspace. Docker e Ansible dependem de instalacao da maquina; veja [docs/ambiente-local.md](docs/ambiente-local.md).
+Este scaffold usa ferramentas locais em `.tools/` para .NET, Terraform e Git neste workspace. Docker e Ansible dependem de instalação da máquina; veja [docs/ambiente-local.md](docs/ambiente-local.md).
 
 ## Publicacao AWS
 
-O caminho atual de publicacao usa Docker Hub para a imagem da API, ECS Fargate Spot para executar o container, S3 privado para o build Angular e CloudFront para entregar o site.
+O caminho atual de publicação usa Docker Hub para a imagem da API, ECS Fargate Spot para executar o container, S3 privado para o build Angular e CloudFront para entregar o site.
 
 Fluxo basico:
 

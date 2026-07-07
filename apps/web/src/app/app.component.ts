@@ -24,9 +24,8 @@ export class AppComponent {
     phone: ['', [Validators.required, Validators.minLength(10)]],
     email: ['', [Validators.required, Validators.email]],
     city: ['', [Validators.required, Validators.minLength(2)]],
-    installationType: ['both' as QuoteRequest['installationType'], [Validators.required]],
-    needsElectricalStandard: [true],
-    hasBiphasicNetwork: [true],
+    electricalSupplyType: ['biphasic-220' as QuoteRequest['electricalSupplyType'], [Validators.required]],
+    propertyType: ['residence' as QuoteRequest['propertyType'], [Validators.required]],
     message: ['']
   });
 
@@ -45,15 +44,14 @@ export class AppComponent {
         this.sending.set(false);
         this.submitted.set(true);
         this.quoteForm.reset({
-          installationType: 'both',
-          needsElectricalStandard: true,
-          hasBiphasicNetwork: true,
+          electricalSupplyType: 'biphasic-220',
+          propertyType: 'residence',
           message: ''
         });
       },
       error: () => {
         this.sending.set(false);
-        this.error.set('Nao foi possivel enviar agora. Tente novamente em instantes.');
+        this.error.set('Não foi possível enviar agora. Tente novamente em instantes.');
       }
     });
   }
