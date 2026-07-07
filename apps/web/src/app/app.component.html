@@ -9,6 +9,7 @@
         <a href="#servicos">Servicos</a>
         <a href="#tecnica">Tecnica</a>
         <a href="#orcamento">Orcamento</a>
+        <a href="#empresa">Empresa</a>
       </nav>
     </header>
 
@@ -119,5 +120,22 @@
       <p class="form-success" *ngIf="submitted()">Orcamento recebido. A assistente virtual continuara o atendimento.</p>
       <button type="submit" [disabled]="sending()">{{ sending() ? 'Enviando...' : 'Enviar para orcamento' }}</button>
     </form>
+  </section>
+
+  <section id="empresa" class="company-section" aria-labelledby="company-title">
+    <div>
+      <p class="eyebrow">Empresa</p>
+      <h2 id="company-title">Higgs Energia - Soluções em Engenharia Elétrica.</h2>
+    </div>
+    <dl class="company-details">
+      <div>
+        <dt>CNPJ</dt>
+        <dd>41.607.271/0001-97</dd>
+      </div>
+      <div>
+        <dt>Endereço</dt>
+        <dd>Rua Equador, 279 - Santa Cecília, Timóteo, MG. CEP 35.182-362.</dd>
+      </div>
+    </dl>
   </section>
 </main>
