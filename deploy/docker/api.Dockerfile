@@ -8,6 +8,8 @@ RUN dotnet publish src/Foton.Api/Foton.Api.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:8080
+ENV Database__Snapshot__LocalPath=/app/data/foton.db
 COPY --from=build /app/publish .
+RUN mkdir -p /app/data
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "Foton.Api.dll"]

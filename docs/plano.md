@@ -3,7 +3,7 @@
 ## Fase 1 - Base publica do projeto
 
 - Criar monorepo com frontend, backend, infraestrutura e deploy.
-- Definir identidade inicial da Foton Energia Fotovoltaica com paleta verde/amarelo.
+- Definir identidade inicial da Higgs Energia com paleta verde/amarelo.
 - Implementar landing page responsiva com chamada para orcamento.
 - Implementar endpoint inicial de orcamento na API.
 - Persistir orcamentos em banco relacional via contrato de repositorio.

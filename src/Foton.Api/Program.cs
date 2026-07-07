@@ -1,6 +1,7 @@
 using Foton.Application.Quotes;
 using Foton.Infrastructure;
 using Foton.Infrastructure.Persistence;
+using Foton.Infrastructure.Persistence.Snapshots;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +10,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("web", policy =>
     {
+        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+            ?? ["http://localhost:4200"];
+
+        if (allowedOrigins.Contains("*"))
+        {
+            policy.AllowAnyOrigin();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins);
+        }
+
         policy
-            .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"])
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -24,9 +36,14 @@ var app = builder.Build();
 
 if (app.Configuration.GetValue("Database:EnsureCreatedOnStartup", false))
 {
+    var snapshotStore = app.Services.GetRequiredService<IDatabaseSnapshotStore>();
+    await snapshotStore.DownloadAsync(CancellationToken.None);
+
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<FotonDbContext>();
     await dbContext.Database.EnsureCreatedAsync();
+
+    await snapshotStore.UploadAsync(CancellationToken.None);
 }
 
 app.UseCors("web");

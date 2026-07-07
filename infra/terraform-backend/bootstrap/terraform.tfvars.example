@@ -1,0 +1,9 @@
+aws_region   = "sa-east-1"
+project_name = "foton-ev"
+environment  = "prod"
+
+# Optional. S3 bucket names are global; leave empty to let Terraform generate one.
+# state_bucket_name = "foton-ev-prod-tfstate-123456"
+
+# Optional. Defaults to foton-ev-prod-tfstate-lock.
+# lock_table_name = "foton-ev-prod-tfstate-lock"

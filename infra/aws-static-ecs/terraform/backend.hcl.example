@@ -1,0 +1,5 @@
+bucket         = "replace-with-bootstrap-output-state-bucket"
+key            = "foton-ev/prod/aws-static-ecs/terraform.tfstate"
+region         = "sa-east-1"
+dynamodb_table = "replace-with-bootstrap-output-lock-table"
+encrypt        = true

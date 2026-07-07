@@ -1,13 +1,3 @@
-param(
-    [Parameter(Mandatory = $true)]
-    [string] $SshAllowedCidr,
-
-    [string] $AwsRegion = "sa-east-1",
-    [string] $ProjectName = "foton-ev",
-    [string] $Environment = "prod",
-    [string] $InstanceType = "t3.small"
-)
-
 $ErrorActionPreference = "Stop"
 
 Remove-Item Env:HTTP_PROXY -ErrorAction SilentlyContinue
@@ -19,7 +9,7 @@ Remove-Item Env:all_proxy -ErrorAction SilentlyContinue
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $terraform = Join-Path $repoRoot ".tools\terraform\terraform.exe"
-$terraformDir = Join-Path $repoRoot "infra\ec2-docker\terraform"
+$terraformDir = Join-Path $repoRoot "infra\terraform-backend\bootstrap"
 
 if (-not (Test-Path $terraform)) {
     throw "Terraform local nao encontrado em .tools\terraform."
@@ -27,20 +17,19 @@ if (-not (Test-Path $terraform)) {
 
 Push-Location $terraformDir
 try {
-    & $terraform init
+    & $terraform fmt -recursive
     if ($LASTEXITCODE -ne 0) {
-        throw "terraform init falhou."
+        throw "terraform fmt falhou com codigo $LASTEXITCODE."
     }
 
-    & $terraform apply -auto-approve `
-        -var "aws_region=$AwsRegion" `
-        -var "project_name=$ProjectName" `
-        -var "environment=$Environment" `
-        -var "instance_type=$InstanceType" `
-        -var "ssh_allowed_cidr=$SshAllowedCidr"
-
+    & $terraform init
     if ($LASTEXITCODE -ne 0) {
-        throw "terraform apply falhou."
+        throw "terraform init falhou com codigo $LASTEXITCODE."
+    }
+
+    & $terraform validate
+    if ($LASTEXITCODE -ne 0) {
+        throw "terraform validate falhou com codigo $LASTEXITCODE."
     }
 }
 finally {
