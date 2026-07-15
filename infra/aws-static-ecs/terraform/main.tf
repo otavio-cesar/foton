@@ -569,4 +569,44 @@ resource "aws_ecs_service" "api" {
     aws_lb_listener.api_http,
     aws_iam_role_policy_attachment.ecs_task_execution
   ]
+
+  lifecycle {
+    ignore_changes = [desired_count]
+  }
+}
+
+resource "aws_appautoscaling_target" "api" {
+  max_capacity       = 1
+  min_capacity       = 0
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.api.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_scheduled_action" "api_start" {
+  name               = "${local.name}-api-start"
+  service_namespace  = aws_appautoscaling_target.api.service_namespace
+  resource_id        = aws_appautoscaling_target.api.resource_id
+  scalable_dimension = aws_appautoscaling_target.api.scalable_dimension
+  schedule           = "cron(0 8 * * ? *)"
+  timezone           = "America/Sao_Paulo"
+
+  scalable_target_action {
+    min_capacity = 1
+    max_capacity = 1
+  }
+}
+
+resource "aws_appautoscaling_scheduled_action" "api_stop" {
+  name               = "${local.name}-api-stop"
+  service_namespace  = aws_appautoscaling_target.api.service_namespace
+  resource_id        = aws_appautoscaling_target.api.resource_id
+  scalable_dimension = aws_appautoscaling_target.api.scalable_dimension
+  schedule           = "cron(0 0 * * ? *)"
+  timezone           = "America/Sao_Paulo"
+
+  scalable_target_action {
+    min_capacity = 0
+    max_capacity = 0
+  }
 }
