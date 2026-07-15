@@ -1,6 +1,7 @@
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +12,7 @@ public sealed class S3DatabaseSnapshotStore : IDatabaseSnapshotStore
     private readonly IAmazonS3 s3Client;
     private readonly DatabaseSnapshotOptions options;
     private readonly ILogger<S3DatabaseSnapshotStore> logger;
+    private readonly SemaphoreSlim snapshotLock = new(1, 1);
 
     public S3DatabaseSnapshotStore(
         IOptions<DatabaseSnapshotOptions> options,
@@ -61,17 +63,60 @@ public sealed class S3DatabaseSnapshotStore : IDatabaseSnapshotStore
             return;
         }
 
-        var request = new PutObjectRequest
-        {
-            BucketName = options.BucketName,
-            Key = options.ObjectKey,
-            FilePath = options.LocalPath,
-            ContentType = "application/x-sqlite3",
-            ServerSideEncryptionMethod = ServerSideEncryptionMethod.AES256
-        };
+        await snapshotLock.WaitAsync(cancellationToken);
 
-        await s3Client.PutObjectAsync(request, cancellationToken);
-        logger.LogInformation("SQLite snapshot uploaded to s3://{Bucket}/{Key}.", options.BucketName, options.ObjectKey);
+        var snapshotPath = $"{options.LocalPath}.{Guid.NewGuid():N}.snapshot";
+
+        try
+        {
+            await CreateConsistentSnapshotAsync(snapshotPath, cancellationToken);
+
+            var request = new PutObjectRequest
+            {
+                BucketName = options.BucketName,
+                Key = options.ObjectKey,
+                FilePath = snapshotPath,
+                ContentType = "application/x-sqlite3",
+                ServerSideEncryptionMethod = ServerSideEncryptionMethod.AES256
+            };
+
+            await s3Client.PutObjectAsync(request, cancellationToken);
+            logger.LogInformation("Consistent SQLite snapshot uploaded to s3://{Bucket}/{Key}.", options.BucketName, options.ObjectKey);
+        }
+        finally
+        {
+            snapshotLock.Release();
+
+            if (File.Exists(snapshotPath))
+            {
+                File.Delete(snapshotPath);
+            }
+        }
+    }
+
+    private async Task CreateConsistentSnapshotAsync(string snapshotPath, CancellationToken cancellationToken)
+    {
+        var sourceConnectionString = new SqliteConnectionStringBuilder
+        {
+            DataSource = options.LocalPath,
+            Mode = SqliteOpenMode.ReadOnly,
+            Pooling = false
+        }.ToString();
+
+        var destinationConnectionString = new SqliteConnectionStringBuilder
+        {
+            DataSource = snapshotPath,
+            Mode = SqliteOpenMode.ReadWriteCreate,
+            Pooling = false
+        }.ToString();
+
+        await using var source = new SqliteConnection(sourceConnectionString);
+        await using var destination = new SqliteConnection(destinationConnectionString);
+
+        await source.OpenAsync(cancellationToken);
+        await destination.OpenAsync(cancellationToken);
+
+        source.BackupDatabase(destination);
     }
 
     private void EnsureLocalDirectory()
