@@ -1,0 +1,17 @@
+aws_region                = "us-east-1"
+project_name              = "foton-ev"
+environment               = "prod"
+api_image                 = "otavioc31/foton-api:4c60781"
+api_desired_count         = 0
+sqlite_object_key         = "sqlite/foton.db"
+cloudfront_distribution_id = "replace-with-existing-distribution-id"
+
+allowed_origins = [
+  "https://higgsenergia.com.br",
+  "https://www.higgsenergia.com.br"
+]
+
+schedule_enabled  = true
+schedule_timezone = "America/Sao_Paulo"
+api_start_schedule = "cron(0 8 * * ? *)"
+api_stop_schedule  = "cron(0 0 * * ? *)"

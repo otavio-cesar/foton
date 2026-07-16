@@ -1,11 +1,11 @@
-# Terraform Backend Bootstrap
+# Terraform Backend Bootstrap (`us-east-1`)
 
 Este bootstrap cria os recursos usados como backend remoto do Terraform:
 
 - Bucket S3 privado, criptografado e versionado para `terraform.tfstate`.
-- Tabela DynamoDB para lock do state.
+- Lock nativo do backend S3 (`use_lockfile = true`).
 
-O bootstrap fica com state local inicialmente, porque ele cria o backend que as outras stacks vao usar.
+O bootstrap fica com state local, porque ele cria o backend que as outras stacks usam.
 
 ## Criar backend
 
@@ -13,16 +13,19 @@ O bootstrap fica com state local inicialmente, porque ele cria o backend que as 
 .\scripts\terraform-backend-bootstrap-apply.ps1
 ```
 
-Depois copie os valores de output para um arquivo `backend.hcl` local na stack que vai usar o backend.
+Os dois estados remotos ficam separados:
 
-Exemplo para `infra/aws-static-ecs/terraform/backend.hcl`:
+- `foton-ev/prod/global-edge/terraform.tfstate`: CloudFront, Route 53 e certificado.
+- `foton-ev/prod/us-runtime/terraform.tfstate`: frontend S3, ALB, ECS e rede em `us-east-1`.
+
+Exemplo de `backend.hcl` local:
 
 ```hcl
-bucket         = "bucket-gerado-pelo-bootstrap"
-key            = "foton-ev/prod/aws-static-ecs/terraform.tfstate"
-region         = "sa-east-1"
-dynamodb_table = "foton-ev-prod-tfstate-lock"
+bucket         = "foton-ev-prod-us-tfstate-045444243386"
+key            = "foton-ev/prod/global-edge/terraform.tfstate"
+region         = "us-east-1"
 encrypt        = true
+use_lockfile   = true
 ```
 
 O arquivo `backend.hcl` deve ficar fora do Git.

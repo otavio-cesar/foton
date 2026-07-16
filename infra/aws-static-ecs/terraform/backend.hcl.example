@@ -1,5 +1,5 @@
-bucket         = "replace-with-bootstrap-output-state-bucket"
-key            = "foton-ev/prod/aws-static-ecs/terraform.tfstate"
-region         = "sa-east-1"
-dynamodb_table = "replace-with-bootstrap-output-lock-table"
+bucket         = "replace-with-us-terraform-state-bucket"
+key            = "foton-ev/prod/global-edge/terraform.tfstate"
+region         = "us-east-1"
 encrypt        = true
+use_lockfile   = true

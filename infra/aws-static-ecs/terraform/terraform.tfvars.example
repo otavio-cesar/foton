@@ -1,13 +1,11 @@
-aws_region        = "sa-east-1"
+aws_region        = "us-east-1"
 project_name      = "foton-ev"
 environment       = "prod"
-api_image         = "otavioc31/foton-api:v2"
-api_desired_count = 1
-sqlite_object_key = "sqlite/foton.db"
 
 custom_domain_names  = ["higgsenergia.com.br", "www.higgsenergia.com.br"]
 enable_custom_domain = false
 manage_route53_zone  = true
 
-# After the first apply, set this to the CloudFront URL if you want stricter CORS.
-# allowed_origins = ["https://xxxxxxxxxxxxx.cloudfront.net"]
+active_runtime_region          = "us-east-1"
+us_frontend_origin_domain_name = "replace-with-us-frontend-bucket-regional-domain"
+us_api_origin_domain_name      = "replace-with-us-api-alb-domain"

@@ -1,7 +1,7 @@
 variable "aws_region" {
-  description = "AWS region for regional resources."
+  description = "Default AWS region used by the global edge stack."
   type        = string
-  default     = "sa-east-1"
+  default     = "us-east-1"
 }
 
 variable "project_name" {
@@ -14,47 +14,6 @@ variable "environment" {
   description = "Deployment environment."
   type        = string
   default     = "prod"
-}
-
-variable "api_image" {
-  description = "Docker Hub image for the .NET API."
-  type        = string
-  default     = "otavioc31/foton-api:v2"
-}
-
-variable "api_cpu" {
-  description = "ECS task CPU units."
-  type        = number
-  default     = 256
-}
-
-variable "api_memory" {
-  description = "ECS task memory in MiB."
-  type        = number
-  default     = 512
-}
-
-variable "api_desired_count" {
-  description = "Desired task count. Keep 1 while using SQLite file snapshots."
-  type        = number
-  default     = 1
-
-  validation {
-    condition     = var.api_desired_count == 1
-    error_message = "SQLite file snapshots are safe only with api_desired_count = 1."
-  }
-}
-
-variable "sqlite_object_key" {
-  description = "S3 object key used to store the SQLite database snapshot."
-  type        = string
-  default     = "sqlite/foton.db"
-}
-
-variable "allowed_origins" {
-  description = "CORS origins allowed by the API."
-  type        = list(string)
-  default     = ["*"]
 }
 
 variable "custom_domain_names" {
@@ -73,4 +32,27 @@ variable "manage_route53_zone" {
   description = "Create and manage the Route 53 hosted zone for the custom domain."
   type        = bool
   default     = true
+}
+
+variable "active_runtime_region" {
+  description = "Regional runtime selected by the existing global CloudFront distribution."
+  type        = string
+  default     = "us-east-1"
+
+  validation {
+    condition     = var.active_runtime_region == "us-east-1"
+    error_message = "The active runtime must be in us-east-1."
+  }
+}
+
+variable "us_frontend_origin_domain_name" {
+  description = "S3 regional domain for the parallel frontend in us-east-1."
+  type        = string
+  default     = ""
+}
+
+variable "us_api_origin_domain_name" {
+  description = "ALB domain for the parallel API in us-east-1."
+  type        = string
+  default     = ""
 }

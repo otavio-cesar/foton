@@ -1,34 +1,31 @@
-# Foton AWS Static + ECS
+# Foton — camada global
 
-Esta stack substitui a EC2 por:
+Esta stack administra somente os componentes globais compartilhados:
 
-- S3 privado para o build estatico do Angular.
-- CloudFront como entrada publica do site.
-- ALB para a API .NET.
-- ECS Fargate Spot para executar a API via imagem do Docker Hub.
-- S3 privado e versionado para snapshots do SQLite.
+- distribuição e OAC do CloudFront;
+- zona e registros do Route 53;
+- certificado ACM do CloudFront em `us-east-1`;
+- seleção das origens do frontend e da API.
 
-Enquanto o banco for SQLite em arquivo, mantenha `api_desired_count = 1`.
-Mais de uma task pode sobrescrever o snapshot no S3.
+O runtime regional está separado em `infra/aws-static-ecs-us`. Não adicione
+ALB, ECS, VPC, buckets da aplicação ou agendamentos a este state.
 
-## Fluxo de publicacao
+## Backend
 
-1. Publicar a imagem da API no Docker Hub.
-2. Aplicar Terraform em `infra/aws-static-ecs/terraform`.
-3. Buildar o Angular.
-4. Sincronizar o conteudo de `apps/web/dist/foton-landing-page/browser` para o bucket `frontend_bucket`.
-5. Criar uma invalidacao no CloudFront.
+O state fica nos Estados Unidos:
 
-O frontend usa chamadas relativas para `/api`, e o CloudFront encaminha `/api/*` e `/health` para o ALB.
+```text
+foton-ev/prod/global-edge/terraform.tfstate
+```
 
-## Dominio proprio
+Use sempre o arquivo de produção explícito e aplique um plano salvo:
 
-O certificado do CloudFront deve ficar no ACM em `us-east-1`.
+```powershell
+terraform init -backend-config=backend.hcl
+terraform validate
+terraform plan -var-file=prod.tfvars -out=global-edge.tfplan
+terraform apply global-edge.tfplan
+```
 
-Fluxo recomendado usando Route 53:
-
-1. Aplicar Terraform com `enable_custom_domain = false`.
-2. Copiar os outputs `route53_name_servers`.
-3. Informar esses servidores DNS no Registro.br.
-4. Aguardar a delegacao DNS propagar e o certificado ACM ficar `ISSUED`.
-5. Aplicar novamente com `enable_custom_domain = true`.
+As origens ativas devem ser os outputs `frontend_bucket_domain_name` e
+`api_load_balancer_domain_name` da stack regional.

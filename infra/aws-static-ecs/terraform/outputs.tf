@@ -1,13 +1,3 @@
-output "frontend_bucket" {
-  description = "Private S3 bucket for Angular build artifacts."
-  value       = aws_s3_bucket.frontend.bucket
-}
-
-output "sqlite_bucket" {
-  description = "Private S3 bucket that stores the SQLite snapshot."
-  value       = aws_s3_bucket.sqlite.bucket
-}
-
 output "cloudfront_distribution_id" {
   description = "CloudFront distribution id."
   value       = aws_cloudfront_distribution.frontend.id
@@ -29,7 +19,7 @@ output "acm_certificate_arn" {
 }
 
 output "acm_dns_validation_records" {
-  description = "Create these DNS CNAME records where the domain DNS is hosted, then wait for ACM to issue the certificate."
+  description = "ACM validation DNS records."
   value = length(aws_acm_certificate.frontend) > 0 ? [
     for option in aws_acm_certificate.frontend[0].domain_validation_options : {
       domain = option.domain_name
@@ -46,21 +36,21 @@ output "route53_zone_id" {
 }
 
 output "route53_name_servers" {
-  description = "Configure these name servers at Registro.br for the domain."
+  description = "Authoritative name servers for the domain."
   value       = length(aws_route53_zone.frontend) > 0 ? aws_route53_zone.frontend[0].name_servers : []
 }
 
-output "api_load_balancer_url" {
-  description = "Direct API load balancer URL."
-  value       = "http://${aws_lb.api.dns_name}"
+output "active_runtime_region" {
+  description = "Regional runtime currently selected by CloudFront."
+  value       = var.active_runtime_region
 }
 
-output "ecs_cluster_name" {
-  description = "ECS cluster name."
-  value       = aws_ecs_cluster.main.name
+output "active_frontend_origin_domain_name" {
+  description = "Frontend origin currently selected by CloudFront."
+  value       = var.us_frontend_origin_domain_name
 }
 
-output "ecs_service_name" {
-  description = "ECS API service name."
-  value       = aws_ecs_service.api.name
+output "active_api_origin_domain_name" {
+  description = "API origin currently selected by CloudFront."
+  value       = var.us_api_origin_domain_name
 }

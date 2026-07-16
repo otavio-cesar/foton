@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for the Terraform backend resources."
   type        = string
-  default     = "sa-east-1"
+  default     = "us-east-1"
 }
 
 variable "project_name" {
@@ -18,12 +18,6 @@ variable "environment" {
 
 variable "state_bucket_name" {
   description = "Optional explicit S3 bucket name. Leave empty to use a generated name with bucket_prefix."
-  type        = string
-  default     = ""
-}
-
-variable "lock_table_name" {
-  description = "DynamoDB table name used for Terraform state locking."
   type        = string
   default     = ""
 }

@@ -3,28 +3,39 @@ output "state_bucket" {
   value       = aws_s3_bucket.state.bucket
 }
 
-output "lock_table" {
-  description = "DynamoDB table used for Terraform state locking."
-  value       = aws_dynamodb_table.lock.name
-}
-
 output "aws_region" {
   description = "AWS region for the backend."
   value       = var.aws_region
 }
 
-output "static_ecs_state_key" {
-  description = "S3 key for the static ECS stack state."
-  value       = "${var.project_name}/${var.environment}/aws-static-ecs/terraform.tfstate"
+output "global_edge_state_key" {
+  description = "S3 key for the global edge stack state."
+  value       = "${var.project_name}/${var.environment}/global-edge/terraform.tfstate"
 }
 
-output "backend_config_static_ecs" {
-  description = "Backend config values for infra/aws-static-ecs/terraform."
+output "us_runtime_state_key" {
+  description = "S3 key for the us-east-1 runtime stack state."
+  value       = "${var.project_name}/${var.environment}/us-runtime/terraform.tfstate"
+}
+
+output "backend_config_global_edge" {
+  description = "Backend config values for the global edge stack."
   value = {
-    bucket         = aws_s3_bucket.state.bucket
-    key            = "${var.project_name}/${var.environment}/aws-static-ecs/terraform.tfstate"
-    region         = var.aws_region
-    dynamodb_table = aws_dynamodb_table.lock.name
-    encrypt        = true
+    bucket       = aws_s3_bucket.state.bucket
+    key          = "${var.project_name}/${var.environment}/global-edge/terraform.tfstate"
+    region       = var.aws_region
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+
+output "backend_config_us_runtime" {
+  description = "Backend config values for the us-east-1 runtime stack."
+  value = {
+    bucket       = aws_s3_bucket.state.bucket
+    key          = "${var.project_name}/${var.environment}/us-runtime/terraform.tfstate"
+    region       = var.aws_region
+    encrypt      = true
+    use_lockfile = true
   }
 }

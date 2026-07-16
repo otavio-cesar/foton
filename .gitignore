@@ -10,6 +10,7 @@ dist/
 **/.terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
 *.tfvars
 !*.tfvars.example
 *.pem
