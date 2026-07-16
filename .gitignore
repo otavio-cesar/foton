@@ -24,3 +24,4 @@ dev-server.log
 *accessKeys*.csv
 **/inventory.ini
 backend.hcl
+scripts/
