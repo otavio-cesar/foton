@@ -1,62 +1,77 @@
-# Higgs Energia - Landing Page EV
+# Higgs Energia — landing page EV
 
-Landing page e API para oferta de instalação de carregadores de veículos elétricos até 7 kW em rede bifásica, com opção de Wallbox/carregador e instalação de padrão elétrico.
+Landing page e API de orçamento para instalação de carregadores de veículos elétricos.
 
-## Stack proposta
+## Arquitetura atual
 
-- Frontend: Angular standalone
-- Backend: .NET 10, Clean Architecture, orientação a objetos
-- Banco: SQLite com snapshot em S3 para MVP
-- Containers: Docker
-- Orquestração: ECS Fargate Spot para a API
-- Nuvem: AWS
-- Infraestrutura: Terraform
-- CDN/frontend: S3 privado com CloudFront
+Produção usa:
+
+- Angular 20 em bucket S3 privado, entregue pelo CloudFront;
+- API .NET 10 em ECS Fargate Spot atrás de um Application Load Balancer;
+- SQLite local à task, com snapshot versionado em S3;
+- Route 53 e certificado ACM para `higgsenergia.com.br`;
+- Terraform com states separados para a camada global e o runtime regional.
+
+O runtime ativo está em `us-east-1`. A separação de states permite evoluir a região e o backend sem misturar o ciclo de vida do domínio e do CloudFront. Enquanto houver SQLite, a API deve executar com no máximo uma task.
+
+Kubernetes, EKS, EC2, RDS e Ansible não fazem parte da arquitetura atual nem do caminho planejado e, por isso, não são mantidos neste repositório.
 
 ## Estrutura
 
 ```text
-apps/web                 Landing page Angular
-src/Foton.Api            API HTTP .NET 10
-src/Foton.Application    Casos de uso e contratos
-src/Foton.Domain         Entidades e regras de dominio
-src/Foton.Infrastructure Banco, assistente virtual e integracoes
-deploy/docker            Dockerfiles
-deploy/k8s               Manifests Kubernetes
-infra/terraform/aws      Provisionamento AWS
-infra/aws-static-ecs     S3, CloudFront, ALB e ECS Fargate Spot
-infra/ansible            Configuracao de maquinas
-docs                     Plano e decisoes tecnicas
+apps/web                     frontend Angular
+src/Foton.Api                API HTTP .NET 10
+src/Foton.Application        casos de uso e contratos
+src/Foton.Domain             entidades e regras de domínio
+src/Foton.Infrastructure     persistência e integrações
+deploy/docker                imagens da API e do frontend
+docker-compose.yml           ambiente local integrado
+infra/aws-static-ecs         camada global ativa em produção
+infra/aws-static-ecs-us      runtime regional ativo em produção
+infra/terraform-backend      bootstrap do state remoto
+docs/ambiente-local.md       execução e validação local
+docs/plano-migracao-lambda.md plano futuro de Lambda e modularização
 ```
 
-## Execucao local esperada
+Os nomes das duas pastas de produção são históricos. Não os use como modelo para novas regiões; a estrutura regional neutra está definida no [plano de migração para Lambda](docs/plano-migracao-lambda.md).
 
-Prerequisitos em uma maquina de desenvolvimento:
+## Execução local
 
-- Node.js e npm
-- .NET SDK 10
-- Docker
+O caminho mais próximo do ambiente publicado usa Docker Compose:
 
 ```powershell
-cmd /c npm install --prefix apps\web
-cmd /c npm run start --prefix apps\web
-powershell -ExecutionPolicy Bypass -File .\scripts\build-backend.ps1
+docker compose up --build
 ```
 
-## Observacoes do ambiente atual
+- site: `http://localhost:4200`
+- API: `http://localhost:8080`
+- health check: `http://localhost:8080/health`
 
-Este scaffold usa ferramentas locais em `.tools/` para .NET, Terraform e Git neste workspace. Docker e Ansible dependem de instalação da máquina; veja [docs/ambiente-local.md](docs/ambiente-local.md).
+O volume `foton_sqlite_data` preserva o banco entre reinicializações. Veja também [Ambiente local](docs/ambiente-local.md) para executar frontend e backend sem containers.
 
-## Publicacao AWS
-
-O caminho atual de publicação usa Docker Hub para a imagem da API, ECS Fargate Spot para executar o container, S3 privado para o build Angular e CloudFront para entregar o site.
-
-Fluxo basico:
+## Validação
 
 ```powershell
-.\scripts\docker-publish-api.ps1 -DockerHubNamespace otavioc31 -Tag v2
-.\scripts\aws-static-ecs-terraform-apply.ps1 -DockerHubNamespace otavioc31 -ImageTag v2
-.\scripts\aws-static-ecs-deploy-frontend.ps1
+dotnet build Foton.slnx
+npm ci --prefix apps/web
+npm run build --prefix apps/web
+docker compose config
 ```
 
-Enquanto o banco for SQLite em arquivo, mantenha apenas uma task da API (`api_desired_count = 1`). Para multiplas instancias ou dados criticos, a proxima evolucao deve ser RDS PostgreSQL ou DynamoDB.
+## Infraestrutura de produção
+
+O inventário das stacks e seus limites de responsabilidade está em [infra/README.md](infra/README.md). Antes de qualquer alteração:
+
+1. inicialize a pasta com o `backend.hcl` correto;
+2. use sempre o arquivo de variáveis explícito do ambiente;
+3. salve o plano e revise todos os `create`, `update` e `destroy`;
+4. aplique exatamente o plano revisado;
+5. rejeite qualquer substituição inesperada de CloudFront, Route 53, ACM, buckets ou runtime.
+
+Remover arquivos Terraform do Git não remove recursos da AWS por si só, mas uma aplicação posterior pode fazê-lo. As stacks ativas foram preservadas integralmente.
+
+## Próxima evolução
+
+A única migração planejada é de ECS/ALB/SQLite para Lambda .NET 10 com um objeto JSON por orçamento no S3. A Lambda será criada em paralelo, habilitada por configuração e validada antes da troca do CloudFront. A modularização do Terraform deve primeiro representar a infraestrutura atual sem recriar recursos e sem fixar `sa-east-1` ou `us-east-1` no código dos módulos.
+
+Detalhes, fases, rollback e critérios de aceite: [Plano de migração para Lambda e modularização do Terraform](docs/plano-migracao-lambda.md).

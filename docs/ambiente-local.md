@@ -1,79 +1,63 @@
 # Ambiente local
 
-## Ferramentas resolvidas neste workspace
+## Pré-requisitos
 
-As ferramentas abaixo foram instaladas localmente em `.tools/`, sem alterar a instalacao global do Windows:
+- Docker Desktop com Docker Compose;
+- Node.js 24 e npm, para executar o frontend fora de containers;
+- .NET SDK 10, para executar a API fora de containers;
+- Terraform 1.6 ou superior, somente para validar infraestrutura.
 
-- .NET SDK 10.0.301
-- Terraform 1.15.7
-- PortableGit 2.55.0
+Ferramentas portáteis podem ficar em `.tools/`. Essa pasta é local, está ignorada pelo Git e não deve ser necessária para entender ou clonar o projeto.
 
-Como `.tools/` esta no `.gitignore`, essas ferramentas nao devem ser versionadas.
+## Ambiente integrado com Docker
 
-## Comandos validados
-
-Frontend:
+Na raiz do repositório:
 
 ```powershell
-cmd /c npm run build --prefix apps\web
-cmd /c npm run start --prefix apps\web
+docker compose up --build
 ```
+
+Serviços:
+
+- frontend: `http://localhost:4200`;
+- API: `http://localhost:8080`;
+- health check: `http://localhost:8080/health`.
+
+O Nginx do container web encaminha `/api/*` e `/health` para a API, reproduzindo o roteamento público. O SQLite fica no volume `foton_sqlite_data`.
+
+Para encerrar sem apagar o banco:
+
+```powershell
+docker compose down
+```
+
+`docker compose down --volumes` também remove os dados locais; use apenas quando quiser reiniciar o SQLite.
+
+## Execução sem containers
 
 Backend:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-backend.ps1
+$env:ASPNETCORE_URLS = "http://localhost:8080"
+dotnet run --project src/Foton.Api/Foton.Api.csproj
 ```
 
-Terraform:
+Frontend, em outro terminal:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\terraform-validate.ps1
+npm ci --prefix apps/web
+npm run start --prefix apps/web
 ```
 
-Git local:
+Por padrão, a API aceita `http://localhost:4200` via CORS e salva o banco em `data/foton.db`, relativo ao diretório do processo.
+
+## Verificações antes de enviar mudanças
 
 ```powershell
-.\.tools\git\cmd\git.exe --version
+dotnet build Foton.slnx
+npm ci --prefix apps/web
+npm run build --prefix apps/web
+docker compose config
 ```
 
-## Pendencias que dependem da maquina
-
-Docker Desktop foi instalado em modo usuario em:
-
-```text
-C:\Users\otavio\AppData\Local\Programs\DockerDesktop
-```
-
-A CLI esta em:
-
-```text
-C:\Users\otavio\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe
-```
-
-O usuario `otavio` foi adicionado ao grupo local `docker-users`. Como o grupo foi adicionado depois da sessao atual iniciar, faca logoff/login ou reinicie o Windows antes de validar o daemon.
-
-Depois do reboot:
-
-```powershell
-docker version
-docker info
-docker compose version
-docker compose up --build
-```
-
-Ansible como control node nao e suportado nativamente no Windows. Para este projeto, a opcao recomendada e WSL2 com Ubuntu e Ansible instalado dentro do Linux. Ansible em container fica como alternativa para CI ou execucoes pontuais depois que Docker estiver funcionando.
-
-Depois que o WSL2 estiver ativo:
-
-```powershell
-wsl --install -d Ubuntu
-```
-
-Dentro do Ubuntu:
-
-```bash
-sudo apt update
-sudo apt install -y ansible python3-pip openssh-client
-ansible --version
-```
+Não é necessário EKS, Kubernetes, EC2 ou Ansible para desenvolver e testar o projeto.

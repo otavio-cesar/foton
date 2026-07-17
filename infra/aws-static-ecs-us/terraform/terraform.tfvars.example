@@ -11,7 +11,7 @@ allowed_origins = [
   "https://www.higgsenergia.com.br"
 ]
 
-schedule_enabled  = true
+schedule_enabled  = false # Agendamentos atuais existem fora do state; importe antes de habilitar.
 schedule_timezone = "America/Sao_Paulo"
 api_start_schedule = "cron(0 8 * * ? *)"
 api_stop_schedule  = "cron(0 0 * * ? *)"
